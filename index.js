@@ -65,5 +65,10 @@ function start() {
       console.log('Please choose a valid shape')
     }
     // here we are setting the logo color
-    userShape.setColor(data)
+    userShape.setColor(data|'text-color');
+
+    svg.setText(logoText, data|'text-color');
+    svg.setShape(userShape);
+    fs.writeFile(${data.shape}).svg, svg.render();
   }
+}
