@@ -1,20 +1,20 @@
-const inquirer = require('inquirer')
-const fs = require('fs')
-const {Circle, Square, Triangle} = require('./shapes')
-const { default: Choices } = require('inquirer/lib/objects/choices')
+const inquirer = require('inquirer');
+const fs = require('fs');
+const { Circle, Square, Triangle } = require('./lib/shape');
+const path = require('path');
 
 // Array of questions for user input
 const questions = [
     {  
-      type: 'input',
+      type: 'list',
       name: 'shape',
       message: 'Please choose a shape',
-      Choices: ['Circle', 'Square', 'Triangle']
+      choices: ['Circle', 'Square', 'Triangle']
     },
     {  
         type: 'input',
         name: 'shape-color',
-        message: 'please choose a shape color',
+        message: 'Please choose a shape color',
     },
     {  
         type: 'input',
@@ -26,49 +26,64 @@ const questions = [
       name: 'text-color',
       message: 'Please type your text color',
     },
-]
-// constructor function that will render  shape and Text elements
+];
+
+// constructor function that will render shape and Text elements
 class SVG {
-  constructor() {
-  this.textEl = '';
-  this.shapeEl = '',
-}
-render() {
-  return `<svg version="1.1" width="300" height="200" xmlns="http://www.w3.org/2000/svg">
-}
-setText(text, color) {
-  if(text.length > 3 && text.length < 1) {
-    throw new Error('please input between 1-3 characters please')
-  }
-this.textEl = `<text x=150 y="125" font-size="60px" text-anchor="middle" fill="${color}">${test}/>text>
-}
-setShape(shape) {
-  this.shapeEl = shape.render();
-}
-}
-
-// function to initialize app
-function start() {
-  inquirer.createPromptModule(questions)
-  .then((data) => {
-    const logoText = data.text
-    const svg = new SVG();
-    // Lets generate the shape of the logo
-    let userShape = '';
-    if(data.shape == 'Circle'){
-    userShape = new Circle();
-    } else if(data.shape == 'Sqaure') {
-      userShape = new Square();
-    } else if(data.shape == 'Triangle')
-     userShape = new Triangle();
-    } else {
-      console.log('Please choose a valid shape')
+    constructor() {
+        this.textEl = '';
+        this.shapeEl = '';
     }
-    // here we are setting the logo color
-    userShape.setColor(data|'text-color');
 
-    svg.setText(logoText, data|'text-color');
-    svg.setShape(userShape);
-    fs.writeFile(${data.shape}).svg, svg.render();
-  }
+    render() {
+        return `<svg version="1.1" width="300" height="200" xmlns="http://www.w3.org/2000/svg">${this.shapeEl}${this.textEl}</svg>`;
+    }
+
+    setText(text, color) {
+        if (text.length < 1 || text.length > 3) {
+            throw new Error('Please input between 1-3 characters');
+        }
+        this.textEl = `<text x="150" y="125" font-size="60px" text-anchor="middle" fill="${color}">${text}</text>`;
+    }
+
+    setShape(shape) {
+        this.shapeEl = shape.render();
+    }
 }
+
+function writeToFile(fileName, data) {
+    fs.writeFile(path.join(process.cwd(), fileName), data, (err) => {
+        if (err) {
+            console.error(err);
+            return;
+        }
+        console.log('File has been saved successfully.');
+    });
+}
+
+function start() {
+    inquirer.prompt(questions)
+        .then((data) => {
+            const logoText = data.text;
+            const svg = new SVG();
+            let userShape = '';
+            if (data.shape === 'Circle') {
+                userShape = new Circle();
+            } else if (data.shape === 'Square') {
+                userShape = new Square();
+            } else if (data.shape === 'Triangle') {
+                userShape = new Triangle();
+            } else {
+                console.log('Please choose a valid shape');
+            }
+            userShape.setColor(data['text-color']);
+            svg.setText(logoText, data['text-color']);
+            svg.setShape(userShape);
+            writeToFile('logo.svg', svg.render());
+        })
+        .catch((err) => {
+            console.error(err);
+        });
+}
+
+start();
