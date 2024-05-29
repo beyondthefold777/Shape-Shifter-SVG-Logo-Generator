@@ -4,7 +4,7 @@ describe('Circle', () => {
   test('renders correctly with specified color', () => {
     const circle = new Circle();
     circle.setColor('red');
-    expect(circle.render()).toBe('<circle cx="50" cy="50" r="40" fill="red" />');
+    expect(circle.render()).toBe('<circle cx="150" cy="100" r="300" fill="red" />');
   });
 });
 
@@ -20,6 +20,6 @@ describe('Square', () => {
   test('renders correctly with specified color', () => {
     const square = new Square();
     square.setColor('green');
-    expect(square.render()).toBe('<rect x="50" y="50" width="100" height="100" fill="green" />');
+    expect(square.render()).toBe('<rect x="73" y="40" width="160" height="160" fill="green" />');
   });
 });

@@ -76,8 +76,8 @@ function start() {
             } else {
                 console.log('Please choose a valid shape');
             }
-            userShape.setColor(data['text-color']);
-            svg.setText(logoText, data['text-color']);
+            userShape.setColor(data['shape-color']); // Set shape color
+            svg.setText(logoText, data['text-color']); // Set text color
             svg.setShape(userShape);
             writeToFile('logo.svg', svg.render());
         })
